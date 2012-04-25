@@ -1,4 +1,5 @@
 import urllib2
+import cookielib
 
 class TylFetcher:
     def fetch(self,page):
@@ -8,9 +9,20 @@ class TylFetcher:
         try:
             req = urllib2.Request(page.url)
             for x in page.headers: req.add_header(x, page.headers[x])
-            r = urllib2.urlopen(req)
+            if page.cookieJar is None:
+                page.cookeJar = cookielib.CookieJar()
+    
+            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(page.cookeJar))
+            r = opener.open(req)
             response = r.read()
+            page.code = r.getcode()
             page.content = response
+            for header in r.info().headers:
+                pair = header.split(":")
+                headerKey = pair[0].strip()
+                headerValue = pair[1].strip()
+                page.responseHeaders[headerKey] = headerValue
+
         except Exception,e:
             print e
 
@@ -19,4 +31,4 @@ if __name__ == "__main__":
     fetcher = TylFetcher()
     page = TylCrawlerPage(url="http://www.taobao.com")
     fetcher.fetch(page)
-    print page.getLinks()
+    #print page.getLinks()

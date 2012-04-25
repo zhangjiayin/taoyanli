@@ -11,7 +11,10 @@ class TylCrawlerPage:
         self.level=1
         self.headers = {'User-Agent': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:11.0) Gecko/20100101 Firefox/11.0"}
         self.links = []
+        self.code  = "0"
+        self.responseHeaders = {}
         self.fetched = False
+        self.cookieJar = None
         for k in kwargs: setattr(self, k,kwargs[k])
 
     def setHeaders(self, **kwargs):
