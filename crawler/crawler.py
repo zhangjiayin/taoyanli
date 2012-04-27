@@ -4,7 +4,7 @@
 from page import TylCrawlerPage
 from fetcher import TylCrawlerFetcher
 from urlparse import urlparse
-
+import time
 class TylCrawler:
     def __init__(self,host="",**kwargs):
         self.host = host
@@ -24,6 +24,10 @@ class TylCrawler:
                     fetcher.fetch(p)
                     links = p.getLinks(self.host)
                     fun(p)
+
+                    if hasattr(self, "sleepSec"):
+                        time.sleep(self.sleepSec)
+
                     if (i+1) == deep:
                         continue
                     for link in links:
@@ -51,6 +55,6 @@ if __name__ == "__main__":
         print v.cookieJar
         print v.responseHeaders
 
-    crawler = TylCrawler('google.com')
+    crawler = TylCrawler('google.com', sleepSec=10)
     crawler.crawl('http://www.google.com',p,1)
 
