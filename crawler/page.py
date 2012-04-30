@@ -15,6 +15,7 @@ class TylCrawlerPage:
         self.responseHeaders = {}
         self.fetched = False
         self.cookieJar  = None
+        self.fetcher = None
         for k in kwargs: setattr(self, k,kwargs[k])
 
     def setHeaders(self, **kwargs):

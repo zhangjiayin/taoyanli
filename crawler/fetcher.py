@@ -1,10 +1,12 @@
 #'http://www.cwi.nl:80/%7Eguido/Python.html' -*- coding: utf8 -*-
+#-*- coding: utf8 -*-
 # vim: set fileencoding=utf8 :
 
 import urllib2
 import cookielib
 
 class TylCrawlerFetcher:
+    timeout = 1
     def fetch(self,page):
         page.fetched = True
         if not hasattr(page, "url"):
@@ -15,7 +17,7 @@ class TylCrawlerFetcher:
             if page.cookieJar is None:
                 page.cookieJar = cookielib.CookieJar()
             opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(page.cookieJar))
-            r = opener.open(req)
+            r = opener.open(req,timeout=self.timeout)
             response = r.read()
             page.code = r.getcode()
             page.content = response
