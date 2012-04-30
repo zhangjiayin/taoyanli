@@ -10,6 +10,18 @@ class TylCrawler:
         self.host = host
         for k in kwargs: setattr(self, k,kwargs[k])
         self.crawledList = []
+    def urlCrawled(self, url):
+        try:
+            if self.crawledList.index(link) != -1:
+                return True
+        except ValueError as e:
+                pass
+        return False
+
+    def fixUrl(self, url):
+        if hasattr(self, "fixUrlFun"):
+            return self.fixUrlFun(url)
+        return url
 
     def crawl(self, url,fun, deep=5):
         page = TylCrawlerPage(url=url)
@@ -31,11 +43,11 @@ class TylCrawler:
                     if (i+1) == deep:
                         continue
                     for link in links:
-                        try:
-                            if self.crawledList.index(link) != -1:
-                                continue
-                        except ValueError as e:
-                            pass
+
+                        link = self.fixUrl(link)
+
+                        if self.urlCrawled(link):
+                            continue;
                         self.crawledList.append(link)
                         pchild = TylCrawlerPage(url=link)
                         pchild.setReferer(p.url)
@@ -55,6 +67,6 @@ if __name__ == "__main__":
         print v.cookieJar
         print v.responseHeaders
 
-    crawler = TylCrawler('google.com', sleepSec=10)
-    crawler.crawl('http://www.google.com',p,1)
+    crawler = TylCrawler('okbuy.com', sleepSec=10)
+    crawler.crawl('http://www.okbuy.com',p,1)
 
